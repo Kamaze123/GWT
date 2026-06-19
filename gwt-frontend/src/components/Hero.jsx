@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import StockChart from "./StockChart"
 
 // ── Typing Animation Headlines ──────────────────────────────────
 // TODO: Edit these phrases to change the animated typing headlines.
@@ -120,20 +121,7 @@ export default function Hero() {
 
       {/* ── RIGHT — Image/Graphic Container ── */}
       <div className="w-full lg:flex-1 flex justify-center items-center mt-12 lg:mt-0">
-        {/* 
-          TODO: Replace this entire placeholder div with your actual image or graphic.
-          Example code:
-          <img 
-            src="/assets/hero-visualization.png" 
-            alt="GWT Market Intelligence Visualization" 
-            className="w-full h-full object-cover" 
-          />
-        */}
-        <div className="w-full max-w-[560px] h-[380px] md:h-[440px] border border-[rgba(212,160,23,0.25)] bg-[#091b17]/10 rounded-sm flex items-center justify-center">
-          <span className="font-mono text-xs text-[#555555] tracking-widest select-none">
-            [HERO IMAGE PLACEHOLDER]
-          </span>
-        </div>
+        <StockChart />
       </div>
 
     </section>

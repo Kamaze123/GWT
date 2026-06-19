@@ -1,6 +1,5 @@
 import Navbar from './components/NavBar'
 import Hero from './components/Hero'
-import StatsBar from './components/Statsbar'
 import Methodology from './components/Methodology'
 import Features from './components/Features'
 import Pricing from './components/Pricing'
