@@ -54,32 +54,32 @@ function generateHistoricalData(config, length = 24) {
   return calculateIndicators(data)
 }
 
-// Calculate rolling average (SMA) and Bollinger Bands
+// Calculate rolling average (SMA) and Weighted Moving Average (WMA)
 function calculateIndicators(data) {
   const smaPeriod = 5
   return data.map((d, idx) => {
     let sma = d.price
-    let upperBand = d.price * 1.015
-    let lowerBand = d.price * 0.985
+    let wma = d.price
 
     if (idx >= smaPeriod - 1) {
       const slice = data.slice(idx - smaPeriod + 1, idx + 1).map(x => x.price)
       const sum = slice.reduce((a, b) => a + b, 0)
       sma = sum / smaPeriod
 
-      const mean = sma
-      const variance = slice.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / smaPeriod
-      const stdDev = Math.sqrt(variance)
-
-      upperBand = sma + 1.6 * stdDev
-      lowerBand = sma - 1.6 * stdDev
+      let weightedSum = 0
+      let weightSum = 0
+      for (let i = 0; i < smaPeriod; i++) {
+        const weight = i + 1
+        weightedSum += slice[i] * weight
+        weightSum += weight
+      }
+      wma = weightedSum / weightSum
     }
 
     return {
       ...d,
       sma: Math.round(sma * 100) / 100,
-      upperBand: Math.round(upperBand * 100) / 100,
-      lowerBand: Math.round(lowerBand * 100) / 100
+      wma: Math.round(wma * 100) / 100
     }
   })
 }
@@ -92,7 +92,7 @@ export default function StockChart() {
   const [stockData, setStockData] = useState(() => generateHistoricalData(STOCKS_CONFIG.RELIANCE, 25))
   
   const [showSMA, setShowSMA] = useState(true)
-  const [showBands, setShowBands] = useState(true)
+  const [showWMA, setShowWMA] = useState(true)
   const [hoverIndex, setHoverIndex] = useState(null)
   
   // Visual pricing tick direction flash state
@@ -170,13 +170,12 @@ export default function StockChart() {
   if (stockData.length > 0) {
     const prices = stockData.map(d => d.price)
     const smas = stockData.map(d => d.sma)
-    const uppers = stockData.map(d => d.upperBand)
-    const lowers = stockData.map(d => d.lowerBand)
+    const wmas = stockData.map(d => d.wma)
 
     const listToCheck = [
       ...prices,
       ...(showSMA ? smas : []),
-      ...(showBands ? [...uppers, ...lowers] : [])
+      ...(showWMA ? wmas : [])
     ]
 
     minVal = Math.min(...listToCheck)
@@ -194,7 +193,7 @@ export default function StockChart() {
   let pricePath = ""
   let priceFillPath = ""
   let smaPath = ""
-  let bandsPath = ""
+  let wmaPath = ""
 
   if (stockData.length > 0) {
     // 1. Price Path (Golden Graph Line)
@@ -206,14 +205,9 @@ export default function StockChart() {
       smaPath = "M " + stockData.map((d, i) => `${getX(i)},${getY(d.sma)}`).join(" L ")
     }
 
-    // 3. Bollinger Bands closed polygon (Soft Gold/Bronze Shading)
-    if (showBands) {
-      const upperPoints = stockData.map((d, i) => `${getX(i)},${getY(d.upperBand)}`)
-      const lowerPoints = [...stockData].reverse().map((d, i) => {
-        const revIdx = stockData.length - 1 - i
-        return `${getX(revIdx)},${getY(d.lowerBand)}`
-      })
-      bandsPath = "M " + upperPoints.concat(lowerPoints).join(" L ") + " Z"
+    // 3. WMA Path (Glowing Green Line)
+    if (showWMA) {
+      wmaPath = "M " + stockData.map((d, i) => `${getX(i)},${getY(d.wma)}`).join(" L ")
     }
   }
 
@@ -319,15 +313,30 @@ export default function StockChart() {
             </g>
           ))}
 
-          {/* Bollinger Bands Shading (Soft Gold Overlay) */}
-          {showBands && bandsPath && (
-            <path
-              d={bandsPath}
-              fill="rgba(212, 160, 23, 0.015)"
-              stroke="rgba(212, 160, 23, 0.05)"
-              strokeWidth="1.2"
-              strokeDasharray="2 2"
-            />
+          {/* WMA Weighted Moving Average Line (Glowing Green Line) */}
+          {showWMA && wmaPath && (
+            <>
+              {/* Outer Glow */}
+              <path
+                d={wmaPath}
+                fill="none"
+                stroke="#4ADE80"
+                strokeWidth="3.5"
+                opacity="0.12"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              {/* Core Stroke */}
+              <path
+                d={wmaPath}
+                fill="none"
+                stroke="#4ADE80"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                opacity="0.85"
+              />
+            </>
           )}
 
           {/* SMA Moving Average Line (Slate-blue Accent Line) */}
@@ -404,12 +413,16 @@ export default function StockChart() {
                 strokeDasharray="2 2"
               />
 
-              {/* Bollinger Upper/Lower Hover Dots */}
-              {showBands && (
-                <>
-                  <circle cx={getX(hoverIndex)} cy={getY(hoverItem.upperBand)} r="3" fill="#D4A017" opacity="0.3" />
-                  <circle cx={getX(hoverIndex)} cy={getY(hoverItem.lowerBand)} r="3" fill="#D4A017" opacity="0.3" />
-                </>
+              {/* WMA Hover Dot */}
+              {showWMA && (
+                <circle
+                  cx={getX(hoverIndex)}
+                  cy={getY(hoverItem.wma)}
+                  r="3.5"
+                  fill="#4ADE80"
+                  stroke="#FFFFFF"
+                  strokeWidth="1"
+                />
               )}
 
               {/* SMA Hover Dot */}
@@ -464,10 +477,10 @@ export default function StockChart() {
               <span>₹{hoverItem.sma.toFixed(2)}</span>
             </div>
           )}
-          {showBands && (
-            <div className="font-sans text-white/70 flex justify-between gap-3 text-[10px] tabular-nums">
-              <span>Bands:</span>
-              <span>{Math.round(hoverItem.lowerBand)} - {Math.round(hoverItem.upperBand)}</span>
+          {showWMA && (
+            <div className="font-sans text-[#4ADE80] flex justify-between gap-3 tabular-nums">
+              <span>WMA (5d):</span>
+              <span>₹{hoverItem.wma.toFixed(2)}</span>
             </div>
           )}
         </div>
@@ -508,17 +521,17 @@ export default function StockChart() {
             <span>Rolling SMA</span>
           </button>
 
-          {/* Toggle Bollinger Bands */}
+          {/* Toggle Weighted Moving Average */}
           <button
-            onClick={() => setShowBands(prev => !prev)}
+            onClick={() => setShowWMA(prev => !prev)}
             className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors cursor-pointer"
           >
             <div className={`w-3.5 h-3.5 border rounded flex items-center justify-center ${
-              showBands ? "border-white bg-white text-black" : "border-gray-600 bg-transparent"
+              showWMA ? "border-white bg-white text-black" : "border-gray-600 bg-transparent"
             }`}>
-              {showBands && <span className="text-[10px] leading-none font-bold">✓</span>}
+              {showWMA && <span className="text-[10px] leading-none font-bold">✓</span>}
             </div>
-            <span>Bollinger Bands</span>
+            <span>Weighted MA</span>
           </button>
 
         </div>
