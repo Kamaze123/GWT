@@ -2,12 +2,12 @@ const steps = [
   {
     num: "01",
     title: "We Collect",
-    body: "We continuously monitor thousands of stocks across the market in real time. Price movements, trading volumes, earnings calendars, sectoral trends, and macroeconomic indicators are all tracked and normalised before any analysis begins.",
+    body: "We continuously monitor stocks across the market in real time. Price movements, trading volumes, earnings calendars, sectoral trends, and macroeconomic indicators are all tracked and normalised before any analysis begins.",
   },
   {
     num: "02",
     title: "We Analyze",
-    body: "Our engine applies rolling averages, weighted averages, momentum indicators and 10 additional quantitative factors alongside a large language model reasoning layer, working together to determine whether the market is trending up, down, or consolidating.",
+    body: "Our engine applies rolling averages, weighted averages and 10 other quantitative factors alongside a large language model reasoning layer, working together to determine whether the market is trending up, down, or consolidating.",
   },
   {
     num: "03",

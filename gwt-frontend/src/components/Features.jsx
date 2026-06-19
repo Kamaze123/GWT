@@ -250,7 +250,7 @@ export default function Features() {
         <FeatText
           label="MARKET MONITORING"
           title={<>We Watch the Market<br />So You Don't Have to</>}
-          body="Our platform continuously monitors thousands of stocks in real time, tracking price movements, volume shifts, momentum changes, and trend direction around the clock. You stay informed without having to stare at charts all day."
+          body="Our platform continuously monitors stocks in real time, tracking price movements, volume shifts, momentum changes, and trend direction around the clock. You stay informed without having to stare at charts all day."
         />
         <MarketMonitoringWidget />
       </FeatRow>
@@ -268,7 +268,7 @@ export default function Features() {
         <FeatText
           label="PORTFOLIO INSIGHTS"
           title={<>Know What the Market<br />Means for Your Portfolio</>}
-          body="Based on your holdings, GWT surfaces the market movements and trend shifts most relevant to your portfolio — weighted by your position sizes. So instead of tracking the entire market, you only see what actually moves your numbers."
+          body="Based on your holdings, GWT surfaces the market movements and trend shifts most relevant to your portfolio. So instead of tracking the entire market, you only see what actually moves your numbers."
         />
         <PortfolioInsightsWidget />
       </FeatRow>

@@ -105,10 +105,10 @@ export default function Hero() {
         {/* CTAs */}
         <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3">
           <a
-            href="#waitlist"
+            href="#platform"
             className="bg-gold hover:bg-gold2 text-black text-sm font-semibold px-6 py-2.5 rounded-sm tracking-wider transition-all duration-200 hover:shadow-[0_0_18px_rgba(212,160,23,0.35)] no-underline"
           >
-            Join Waitlist →
+            Explore Features →
           </a>
           <a
             href="#methodology"

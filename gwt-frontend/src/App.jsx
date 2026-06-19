@@ -12,7 +12,6 @@ function App() {
       <Hero />
       <Methodology />
       <Features />
-      <Pricing />
       <Footer />
     </main>
   )
