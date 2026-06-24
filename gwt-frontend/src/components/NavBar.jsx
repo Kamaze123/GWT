@@ -15,7 +15,7 @@ export default function Navbar() {
 
         {/* Logo */}
         <a href="#" className="flex items-center gap-2.5 no-underline flex-shrink-0">
-          <div className="w-8 h-8 bg-green2 flex items-center justify-center font-mono text-xs font-medium text-white rounded-sm">
+          <div className="w-8 h-8 bg-gold  flex items-center justify-center font-mono text-xs font-medium text-white rounded-sm">
             GWT
           </div>
           <span className="text-sm font-semibold text-[#E8E8E8] tracking-wide">
@@ -30,10 +30,10 @@ export default function Navbar() {
               <a
               href={link.href}
               onClick={() => setMenuOpen(false)}
-              className="relative text-[#9A9A9A] text-sm py-1 border-b border-green/10 hover:text-green transition-colors duration-200 no-underline group"
+              className="relative text-[#9A9A9A] text-sm py-1 border-b border-gold/10 hover:text-gold transition-colors duration-200 no-underline group"
               >
               {link.label}
-              <span className="absolute bottom-0 left-0 w-0 h-px bg-green group-hover:w-full transition-all duration-300" />
+              <span className="absolute bottom-0 left-0 w-0 h-px bg-gold group-hover:w-full transition-all duration-300" />
               </a>
             </li>
           ))}
@@ -62,10 +62,10 @@ export default function Navbar() {
               key={link.href}
               href={link.href}
               onClick={() => setMenuOpen(false)}
-              className="relative text-[#9A9A9A] text-sm py-1 border-b border-green/10 hover:text-green transition-colors duration-200 no-underline group"
+              className="relative text-[#9A9A9A] text-sm py-1 border-b border-gold/10 hover:text-gold transition-colors duration-200 no-underline group"
             >
               {link.label}
-              <span className="absolute bottom-0 left-0 w-0 h-px bg-green group-hover:w-full transition-all duration-300" />
+              <span className="absolute bottom-0 left-0 w-0 h-px bg-gold group-hover:w-full transition-all duration-300" />
             </a>
           ))}
         </div>
